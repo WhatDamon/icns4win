@@ -31,6 +31,7 @@
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
+            configToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -46,7 +47,14 @@
             moreFilePathBtn = new Button();
             convertBtn = new Button();
             actionsGroupBox = new GroupBox();
-            checkBox1 = new CheckBox();
+            convertJp2ToPngCheckBox = new CheckBox();
+            renameWithKeysCheckBox = new CheckBox();
+            saveBinCheckBox = new CheckBox();
+            saveArgbCheckBox = new CheckBox();
+            saveRgbCheckBox = new CheckBox();
+            savePlistCheckBox = new CheckBox();
+            saveJp2CheckBox = new CheckBox();
+            savePngCheckBox = new CheckBox();
             clearBtn = new Button();
             saveAllBtn = new Button();
             menuStrip.SuspendLayout();
@@ -62,13 +70,13 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(694, 32);
+            menuStrip.Size = new Size(627, 32);
             menuStrip.TabIndex = 0;
             menuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, toolStripMenuItem1, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, configToolStripMenuItem, toolStripMenuItem1, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(84, 28);
             fileToolStripMenuItem.Text = "文件(&F)";
@@ -77,19 +85,27 @@
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(215, 34);
+            openToolStripMenuItem.Size = new Size(270, 34);
             openToolStripMenuItem.Text = "打开";
+            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
+            // 
+            // configToolStripMenuItem
+            // 
+            configToolStripMenuItem.Name = "configToolStripMenuItem";
+            configToolStripMenuItem.Size = new Size(270, 34);
+            configToolStripMenuItem.Text = "配置";
+            configToolStripMenuItem.Click += configToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(212, 6);
+            toolStripMenuItem1.Size = new Size(267, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            exitToolStripMenuItem.Size = new Size(215, 34);
+            exitToolStripMenuItem.Size = new Size(270, 34);
             exitToolStripMenuItem.Text = "退出";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -110,9 +126,9 @@
             // 
             statusStrip.ImageScalingSize = new Size(24, 24);
             statusStrip.Items.AddRange(new ToolStripItem[] { statusToolStripStatusLabel, currentStatusStripStatusLabel });
-            statusStrip.Location = new Point(0, 365);
+            statusStrip.Location = new Point(0, 430);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(694, 32);
+            statusStrip.Size = new Size(627, 32);
             statusStrip.SizingGrip = false;
             statusStrip.TabIndex = 3;
             statusStrip.Text = "statusStrip";
@@ -134,9 +150,9 @@
             // 
             previewGroupBox.Controls.Add(previewStatusLabel);
             previewGroupBox.Controls.Add(previewPictureBox);
-            previewGroupBox.Location = new Point(413, 35);
+            previewGroupBox.Location = new Point(347, 35);
             previewGroupBox.Name = "previewGroupBox";
-            previewGroupBox.Size = new Size(269, 326);
+            previewGroupBox.Size = new Size(269, 388);
             previewGroupBox.TabIndex = 10;
             previewGroupBox.TabStop = false;
             previewGroupBox.Text = "预览";
@@ -144,11 +160,12 @@
             // previewStatusLabel
             // 
             previewStatusLabel.AutoSize = true;
+            previewStatusLabel.Font = new Font("Microsoft YaHei UI", 6F);
             previewStatusLabel.Location = new Point(6, 292);
             previewStatusLabel.Name = "previewStatusLabel";
-            previewStatusLabel.Size = new Size(143, 24);
+            previewStatusLabel.Size = new Size(119, 85);
             previewStatusLabel.TabIndex = 10;
-            previewStatusLabel.Text = "请提供 icns 图标";
+            previewStatusLabel.Text = "统计信息:\r\nPNG与JP2图片: --\r\nRGB与ARGB文件: --\r\nBIN文件: --\r\n信息文件: --";
             // 
             // previewPictureBox
             // 
@@ -171,13 +188,13 @@
             // 
             filePathTextBox.Location = new Point(12, 62);
             filePathTextBox.Name = "filePathTextBox";
-            filePathTextBox.Size = new Size(359, 30);
+            filePathTextBox.Size = new Size(290, 30);
             filePathTextBox.TabIndex = 1;
             filePathTextBox.TextChanged += filePathTextBox_TextChanged;
             // 
             // moreFilePathBtn
             // 
-            moreFilePathBtn.Location = new Point(370, 60);
+            moreFilePathBtn.Location = new Point(304, 60);
             moreFilePathBtn.Name = "moreFilePathBtn";
             moreFilePathBtn.Size = new Size(37, 34);
             moreFilePathBtn.TabIndex = 2;
@@ -198,44 +215,135 @@
             // 
             // actionsGroupBox
             // 
-            actionsGroupBox.Controls.Add(checkBox1);
+            actionsGroupBox.Controls.Add(convertJp2ToPngCheckBox);
+            actionsGroupBox.Controls.Add(renameWithKeysCheckBox);
+            actionsGroupBox.Controls.Add(saveBinCheckBox);
+            actionsGroupBox.Controls.Add(saveArgbCheckBox);
+            actionsGroupBox.Controls.Add(saveRgbCheckBox);
+            actionsGroupBox.Controls.Add(savePlistCheckBox);
+            actionsGroupBox.Controls.Add(saveJp2CheckBox);
+            actionsGroupBox.Controls.Add(savePngCheckBox);
             actionsGroupBox.Controls.Add(clearBtn);
             actionsGroupBox.Controls.Add(saveAllBtn);
             actionsGroupBox.Enabled = false;
             actionsGroupBox.Location = new Point(12, 138);
             actionsGroupBox.Name = "actionsGroupBox";
-            actionsGroupBox.Size = new Size(395, 223);
+            actionsGroupBox.Size = new Size(329, 285);
             actionsGroupBox.TabIndex = 4;
             actionsGroupBox.TabStop = false;
             actionsGroupBox.Text = "操作";
             // 
-            // checkBox1
+            // convertJp2ToPngCheckBox
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(6, 29);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(129, 28);
-            checkBox1.TabIndex = 10;
-            checkBox1.Text = "只输出PNG";
-            checkBox1.UseVisualStyleBackColor = true;
+            convertJp2ToPngCheckBox.AutoSize = true;
+            convertJp2ToPngCheckBox.Checked = true;
+            convertJp2ToPngCheckBox.CheckState = CheckState.Checked;
+            convertJp2ToPngCheckBox.Enabled = false;
+            convertJp2ToPngCheckBox.Location = new Point(156, 165);
+            convertJp2ToPngCheckBox.Name = "convertJp2ToPngCheckBox";
+            convertJp2ToPngCheckBox.Size = new Size(158, 28);
+            convertJp2ToPngCheckBox.TabIndex = 11;
+            convertJp2ToPngCheckBox.Text = "JP2转换成PNG";
+            convertJp2ToPngCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // renameWithKeysCheckBox
+            // 
+            renameWithKeysCheckBox.AutoSize = true;
+            renameWithKeysCheckBox.Enabled = false;
+            renameWithKeysCheckBox.Location = new Point(6, 165);
+            renameWithKeysCheckBox.Name = "renameWithKeysCheckBox";
+            renameWithKeysCheckBox.Size = new Size(144, 28);
+            renameWithKeysCheckBox.TabIndex = 10;
+            renameWithKeysCheckBox.Text = "键名命名文件";
+            renameWithKeysCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // saveBinCheckBox
+            // 
+            saveBinCheckBox.AutoSize = true;
+            saveBinCheckBox.Enabled = false;
+            saveBinCheckBox.Location = new Point(6, 131);
+            saveBinCheckBox.Name = "saveBinCheckBox";
+            saveBinCheckBox.Size = new Size(270, 28);
+            saveBinCheckBox.TabIndex = 9;
+            saveBinCheckBox.Text = "输出BIN(包括TOC、Mask等)";
+            saveBinCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // saveArgbCheckBox
+            // 
+            saveArgbCheckBox.AutoSize = true;
+            saveArgbCheckBox.Enabled = false;
+            saveArgbCheckBox.Location = new Point(6, 97);
+            saveArgbCheckBox.Name = "saveArgbCheckBox";
+            saveArgbCheckBox.Size = new Size(121, 28);
+            saveArgbCheckBox.TabIndex = 8;
+            saveArgbCheckBox.Text = "输出ARGB";
+            saveArgbCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // saveRgbCheckBox
+            // 
+            saveRgbCheckBox.AutoSize = true;
+            saveRgbCheckBox.Enabled = false;
+            saveRgbCheckBox.Location = new Point(6, 63);
+            saveRgbCheckBox.Name = "saveRgbCheckBox";
+            saveRgbCheckBox.Size = new Size(108, 28);
+            saveRgbCheckBox.TabIndex = 6;
+            saveRgbCheckBox.Text = "输出RGB";
+            saveRgbCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // savePlistCheckBox
+            // 
+            savePlistCheckBox.AutoSize = true;
+            savePlistCheckBox.Enabled = false;
+            savePlistCheckBox.Location = new Point(120, 63);
+            savePlistCheckBox.Name = "savePlistCheckBox";
+            savePlistCheckBox.Size = new Size(193, 28);
+            savePlistCheckBox.TabIndex = 7;
+            savePlistCheckBox.Text = "输出其他信息(plist)";
+            savePlistCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // saveJp2CheckBox
+            // 
+            saveJp2CheckBox.AutoSize = true;
+            saveJp2CheckBox.Checked = true;
+            saveJp2CheckBox.CheckState = CheckState.Checked;
+            saveJp2CheckBox.Enabled = false;
+            saveJp2CheckBox.Location = new Point(120, 29);
+            saveJp2CheckBox.Name = "saveJp2CheckBox";
+            saveJp2CheckBox.Size = new Size(203, 28);
+            saveJp2CheckBox.TabIndex = 5;
+            saveJp2CheckBox.Text = "输出JP2(JPEG 2000)";
+            saveJp2CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // savePngCheckBox
+            // 
+            savePngCheckBox.AutoSize = true;
+            savePngCheckBox.Checked = true;
+            savePngCheckBox.CheckState = CheckState.Checked;
+            savePngCheckBox.Enabled = false;
+            savePngCheckBox.Location = new Point(6, 29);
+            savePngCheckBox.Name = "savePngCheckBox";
+            savePngCheckBox.Size = new Size(111, 28);
+            savePngCheckBox.TabIndex = 4;
+            savePngCheckBox.Text = "输出PNG";
+            savePngCheckBox.UseVisualStyleBackColor = true;
             // 
             // clearBtn
             // 
             clearBtn.ForeColor = Color.Red;
-            clearBtn.Location = new Point(6, 179);
+            clearBtn.Location = new Point(6, 245);
             clearBtn.Name = "clearBtn";
-            clearBtn.Size = new Size(383, 34);
-            clearBtn.TabIndex = 9;
+            clearBtn.Size = new Size(317, 34);
+            clearBtn.TabIndex = 13;
             clearBtn.Text = "清空";
             clearBtn.UseVisualStyleBackColor = true;
             // 
             // saveAllBtn
             // 
             saveAllBtn.Font = new Font("Microsoft YaHei UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 134);
-            saveAllBtn.Location = new Point(6, 139);
+            saveAllBtn.Location = new Point(6, 205);
             saveAllBtn.Name = "saveAllBtn";
-            saveAllBtn.Size = new Size(383, 34);
-            saveAllBtn.TabIndex = 8;
+            saveAllBtn.Size = new Size(317, 34);
+            saveAllBtn.TabIndex = 12;
             saveAllBtn.Text = "保存全部";
             saveAllBtn.UseVisualStyleBackColor = true;
             // 
@@ -243,7 +351,7 @@
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(694, 397);
+            ClientSize = new Size(627, 462);
             Controls.Add(actionsGroupBox);
             Controls.Add(convertBtn);
             Controls.Add(moreFilePathBtn);
@@ -252,11 +360,15 @@
             Controls.Add(previewGroupBox);
             Controls.Add(statusStrip);
             Controls.Add(menuStrip);
-            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "WndMain";
+            ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "icns4win";
+            FormClosing += WndMain_FormClosing;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             statusStrip.ResumeLayout(false);
@@ -291,7 +403,15 @@
         private Button convertBtn;
         private GroupBox actionsGroupBox;
         private Button saveAllBtn;
-        private CheckBox checkBox1;
+        private CheckBox savePngCheckBox;
         private Button clearBtn;
+        private ToolStripMenuItem configToolStripMenuItem;
+        private CheckBox saveArgbCheckBox;
+        private CheckBox saveRgbCheckBox;
+        private CheckBox savePlistCheckBox;
+        private CheckBox saveJp2CheckBox;
+        private CheckBox convertJp2ToPngCheckBox;
+        private CheckBox renameWithKeysCheckBox;
+        private CheckBox saveBinCheckBox;
     }
 }

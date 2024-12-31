@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "icns4win", "icns4win.csproj", "{DBE584CF-D694-4F90-852A-F77B648D540D}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "icnsutil", "icnsutil\icnsutil.pyproj", "{6E48B6EC-71B6-47D6-94CE-A20F4680939B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{DBE584CF-D694-4F90-852A-F77B648D540D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBE584CF-D694-4F90-852A-F77B648D540D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBE584CF-D694-4F90-852A-F77B648D540D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E48B6EC-71B6-47D6-94CE-A20F4680939B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E48B6EC-71B6-47D6-94CE-A20F4680939B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

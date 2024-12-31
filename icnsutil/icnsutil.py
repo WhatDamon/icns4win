@@ -2,14 +2,10 @@
 # Modified by: WhatDamon
 
 #!/usr/bin/env python3
-"""
-Export existing icns files or compose new ones.
-"""
 import os  # path, makedirs
 import sys  # path, stderr
 import struct  # pack, unpack
 from typing import (
-    Iterator,
     Optional,
     Callable,
     List,
@@ -22,9 +18,6 @@ from typing import (
 )
 from argparse import ArgumentParser, ArgumentTypeError, Namespace as ArgParams
 from math import sqrt
-
-if __name__ == "__main__":
-    sys.path[0] = os.path.dirname(sys.path[0])
 
 
 class CanNotDetermine(Exception):
@@ -84,29 +77,6 @@ class Media:
     def is_type(self, typ: str) -> bool:
         return typ in self.types
 
-    def is_binary(self) -> bool:
-        return any(x in self.types for x in ["rgb", "bin"])
-
-    def fallback_ext(self) -> str:
-        if self.channels in [1, 2]:
-            return self.desc  # guaranteed to be icon, mask, or iconmask
-        return self.types[-1]
-
-    def decompress(
-        self, data: bytes, ext: Optional[str] = "-?-"
-    ) -> Optional[List[int]]:
-        """Returns None if media is not decompressable."""
-        if self.compressable:
-            if ext == "-?-":
-                ext = determine_file_ext(data)
-            if ext == "argb":
-                return unpack(data[4:])  # remove ARGB header
-            if ext is None or ext == "rgb":  # RGB files dont have magic number
-                if self.key == "it32":
-                    data = data[4:]
-                return unpack(data)
-        return None
-
     def filename(self, *, key_only: bool = False, size_only: bool = False) -> str:
         if key_only:
             if os.path.exists(__file__.upper()):  # check case senstive
@@ -135,21 +105,6 @@ class Media:
                 if self.desc in ["mask", "iconmask"]:
                     suffix += "-mask{}b".format(self.bits)
             return "{}x{}{}".format(w, h, suffix)
-
-    def __repr__(self) -> str:
-        return "<{}: {}, {}.{}>".format(
-            type(self).__name__, str(self.key), self.filename(), self.types[0]
-        )
-
-    def __str__(self) -> str:
-        T = ""
-        if self.size:
-            T += "{}x{}, ".format(*self.size)
-            if self.maxsize:
-                T += "{}ch@{}-bit={}, ".format(self.channels, self.bits, self.maxsize)
-        if self.desc:
-            T += self.desc + ", "
-        return "{}: {}macOS {}+".format(str(self.key), T, self.availability or "?")
 
 
 _TYPES = {
@@ -274,13 +229,6 @@ def match_maxsize(total: int, typ: str) -> Media:
 
 
 def guess(data: bytes, filename: Optional[str] = None) -> Media:
-    """
-    Guess icns media type by analyzing the raw data + file naming convention.
-    Use:
-    - @2x.png or @2x.jp2 for retina images
-    - directly name the file with the corresponding icns-key
-    - or {selected|template|dark}.icns to select the proper icns key.
-    """
     # Set type directly via filename
     if filename:
         bname = os.path.splitext(os.path.basename(filename))[0]
@@ -341,10 +289,6 @@ def guess(data: bytes, filename: Optional[str] = None) -> Media:
 
 
 def _best_option(choices: List[Media], ext: Optional[str] = None) -> Media:
-    """
-    Get most favorable media type.
-    If more than one option exists, choose based on order index of ext.
-    """
     if len(choices) == 1:
         return choices[0]
     # Try get most favorable type (sort order of types)
@@ -363,49 +307,8 @@ def _best_option(choices: List[Media], ext: Optional[str] = None) -> Media:
         choices = best_choice
 
     raise CanNotDetermine(
-        "Could not determine type ¨C one of {}.".format([x.key for x in choices])
+        "Could not determine type ï¿½C one of {}.".format([x.key for x in choices])
     )
-
-
-def pack(data: List[int]) -> bytes:
-    ret = []  # type: List[int]
-    buf = []  # type: List[int]
-    i = 0
-
-    def flush_buf() -> None:
-        # write out non-repeating bytes
-        if len(buf) > 0:
-            ret.append(len(buf) - 1)
-            ret.extend(buf)
-            buf.clear()
-
-    end = len(data)
-    while i < end:
-        arr = data[i : i + 3]
-        x = arr[0]
-        if len(arr) == 3 and x == arr[1] and x == arr[2]:
-            flush_buf()
-            # repeating
-            c = 3
-            while (i + c) < end and data[i + c] == x:
-                c += 1
-            i += c
-            while c > 130:  # max number of copies encodable in compression
-                ret.append(0xFF)
-                ret.append(x)
-                c -= 130
-            if c > 2:
-                ret.append(c + 0x7D)  # 0x80 - 3
-                ret.append(x)
-            else:
-                i -= c
-        else:
-            buf.append(x)
-            if len(buf) > 127:
-                flush_buf()
-            i += 1
-    flush_buf()
-    return bytes(ret)
 
 
 def unpack(data: bytes) -> List[int]:
@@ -438,24 +341,6 @@ def get_size(data: bytes) -> int:
     return count
 
 
-def msb_stream(data: Union[bytes, List[int]], *, bits: int) -> Iterator[int]:
-    if bits not in [1, 2, 4]:
-        raise NotImplementedError("Unsupported bit-size.")
-    c = 0
-    byte = 0
-    for x in data:  # 8-bits in, most significant n-bits out
-        c += bits
-        byte <<= bits
-        byte |= x >> (8 - bits)
-        if c == 8:
-            yield byte
-            c = 0
-            byte = 0
-    if c > 0:  # fill up missing bits
-        byte <<= 8 - c
-        yield byte
-
-
 class ArgbImage:
     __slots__ = ["a", "r", "g", "b", "size", "channels"]
 
@@ -468,10 +353,6 @@ class ArgbImage:
         image: None,
         mask: Union[bytes, str, None] = None,
     ) -> None:
-        """
-        Provide either a filename or raw binary data.
-        - mask : Optional, may be either binary data or filename
-        """
         self.size = (0, 0)
         self.channels = 0
         if file:
@@ -504,7 +385,6 @@ class ArgbImage:
         raise type(tmp)('{} File: "{}"'.format(str(tmp), fname))
 
     def load_data(self, data: bytes) -> None:
-        """Has support for ARGB and RGB-channels files."""
         is_argb = data[:4] == b"ARGB"
         if is_argb or data[:4] == b"\x00\x00\x00\x00":
             data = data[4:]  # remove ARGB and it32 header
@@ -528,15 +408,12 @@ class ArgbImage:
         self.g = uncompressed_data[(i + 1) * per_channel : (i + 2) * per_channel]
         self.b = uncompressed_data[(i + 2) * per_channel : (i + 3) * per_channel]
 
+
 class ParserError(Exception):
     pass
 
 
 def determine_file_ext(data: bytes) -> Optional[str]:
-    """
-    Data should be at least 8 bytes long.
-    Returns one of: png, argb, plist, jp2, icns, None
-    """
     if data[:8] == b"\x89PNG\x0d\x0a\x1a\x0a":
         return "png"
     if data[:4] == b"ARGB":
@@ -558,7 +435,6 @@ def determine_file_ext(data: bytes) -> Optional[str]:
 def determine_image_size(
     data: bytes, ext: Optional[str] = None
 ) -> Optional[Tuple[int, int]]:
-    """Supports PNG, ARGB, and Jpeg 2000 image data."""
     if not ext:
         ext = determine_file_ext(data)
     if ext == "png":
@@ -584,7 +460,6 @@ def determine_image_size(
 
 
 def is_icns_without_header(data: bytes) -> bool:
-    """Returns True even if icns header is missing."""
     offset = 0
     for i in range(2):  # test n keys if they exist
         key, size = icns_header_read(data[offset : offset + 8])
@@ -601,7 +476,6 @@ def is_icns_without_header(data: bytes) -> bool:
 
 
 def icns_header_read(data: bytes) -> Tuple[Media.KeyT, int]:
-    """Returns icns type name and data length (incl. +8 for header)"""
     assert isinstance(data, bytes)
     if len(data) != 8:
         return "", 0
@@ -613,17 +487,11 @@ def icns_header_read(data: bytes) -> Tuple[Media.KeyT, int]:
 
 
 def icns_header_w_len(key: Media.KeyT, length: int) -> bytes:
-    """Adds +8 to length."""
     name = key.encode("utf8") if isinstance(key, str) else key
     return name + struct.pack(">I", length + 8)
 
 
 def parse_icns_file(fname: str) -> Iterator[Tuple[Media.KeyT, bytes]]:
-    """
-    Parse file and yield media entries: (key, data)
-    :raises:
-        ParserError: if file is not an icns file ("icns" header missing)
-    """
     with open(fname, "rb") as fp:
         # Check whether it is an actual ICNS file
         magic_num, _ = icns_header_read(fp.read(8))  # ignore total size
@@ -642,10 +510,6 @@ class IcnsFile:
 
     @staticmethod
     def verify(fname: str) -> Iterator[str]:
-        """
-        Yields an error message for each issue.
-        You can check for validity with `is_invalid = any(obj.verify())`
-        """
         all_keys = set()
         bin_keys = set()
         try:
@@ -715,7 +579,6 @@ class IcnsFile:
                 yield "Redundant keys: {} and {} have identical size.".format(x, y)
 
     def __init__(self, file: Optional[str] = None) -> None:
-        """Read .icns file and load bundled media files into memory."""
         self.media = {}  # type: Dict[Media.KeyT, bytes]
         self.infile = file
         if not file:  # create empty image
@@ -741,21 +604,9 @@ class IcnsFile:
         *,
         allowed_ext: str = "*",
         key_suffix: bool = False,
-        convert_png: bool = False,
         decompress: bool = False,
         recursive: bool = False,
     ) -> Dict[Media.KeyT, Union[str, Dict]]:
-        """
-        Write all bundled media files to output directory.
-
-        - outdir : If none provided, use same directory as source file.
-        - allowed_ext : Export only data with matching extension(s).
-        - key_suffix : If True, use icns type instead of image size filename.
-        - convert_png : If True, convert rgb and argb images to png.
-        - decompress : Only relevant for ARGB and 24-bit binary images.
-        - recursive : Repeat export for all attached icns files.
-                      Incompatible with png_only flag.
-        """
         if not outdir:  # aka, determine by input file
             # Determine filename and prepare output directory
             outdir = (self.infile or "in-memory.icns") + ".export"
@@ -767,18 +618,6 @@ class IcnsFile:
         if self.infile:
             export_files["_"] = self.infile
         keys = list(self.media.keys())
-        # Convert to PNG
-        if convert_png:
-            for imgk, maskk in enum_png_convertable(keys):
-                fname = self._export_to_png(outdir, imgk, maskk, key_suffix)
-                if not fname:
-                    continue
-                export_files[imgk] = fname
-                if maskk:
-                    export_files[maskk] = fname
-                    if maskk in keys:
-                        keys.remove(maskk)
-                keys.remove(imgk)
 
         # prepare filter
         allowed = [] if allowed_ext == "*" else allowed_ext.split(",")
@@ -793,21 +632,6 @@ class IcnsFile:
             if fname:
                 export_files[key] = fname
 
-        # repeat for all icns
-        if recursive:
-            for old_key, old_name in export_files.items():
-                assert isinstance(old_name, str)
-                if not old_name.endswith(".icns") or old_key == "_":
-                    continue
-                export_files[old_key] = IcnsFile(old_name).export(
-                    allowed_ext=allowed_ext,
-                    key_suffix=key_suffix,
-                    convert_png=convert_png,
-                    decompress=decompress,
-                    recursive=True,
-                )
-                if cleanup:
-                    os.remove(old_name)
         return export_files
 
     def _export_single(
@@ -864,21 +688,8 @@ class IcnsFile:
             ArgbImage(data=data, mask=mask_data).write_png(fname)
         return fname
 
-    def __repr__(self) -> str:
-        lst = ", ".join(str(k) for k in self.media.keys())
-        return "<{}: file={}, [{}]>".format(type(self).__name__, self.infile, lst)
-
-    def __str__(self) -> str:
-        return (
-            "File: "
-            + (self.infile or "-mem-")
-            + os.linesep
-            + IcnsFile._description(self.media.items(), indent=2)
-        )
-
 
 def cli_extract(args: ArgParams) -> None:
-    """Read and extract contents of icns file(s)."""
     multiple = len(args.file) > 1 or "-" in args.file
     for i, fname in enumerate(enum_with_stdin(args.file)):
         # PathExist ensures that all files and directories exist
@@ -889,11 +700,10 @@ def cli_extract(args: ArgParams) -> None:
 
         IcnsFile(fname).export(
             out,
-            allowed_ext="png" if args.png_only else "*",
-            recursive=args.recursive,
-            convert_png=args.convert,
+            allowed_ext="*",
             key_suffix=args.keys,
         )
+
 
 def enum_with_stdin(file_arg: List[str]) -> Iterator[str]:
     for x in file_arg:
@@ -949,38 +759,19 @@ def main() -> None:
     # Extract
     cmd = add_command("extract", ["e"], cli_extract)
     cmd.add_argument(
-        "-r",
-        "--recursive",
-        action="store_true",
-        help="extract nested icns files as well",
-    )
-    cmd.add_argument(
         "-o",
         "--export-dir",
         type=PathExist("d"),
         metavar="DIR",
-        help="set custom export directory",
+        help="",
     )
-    cmd.add_argument(
-        "-k", "--keys", action="store_true", help="use icns key as filename"
-    )
-    cmd.add_argument(
-        "-c",
-        "--convert",
-        action="store_true",
-        help="convert ARGB and RGB images to PNG",
-    )
-    cmd.add_argument(
-        "--png-only",
-        action="store_true",
-        help="do not extract ARGB, binary, and meta files",
-    )
+    cmd.add_argument("-k", "--keys", action="store_true", help="")
     cmd.add_argument(
         "file",
         type=PathExist("f", stdin=True),
         nargs="+",
         metavar="FILE",
-        help="One or more .icns files",
+        help="",
     )
 
     args = parser.parse_args()
@@ -988,4 +779,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    sys.path[0] = os.path.dirname(sys.path[0])
     main()
