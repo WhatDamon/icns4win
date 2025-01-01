@@ -35,6 +35,7 @@
             toolStripMenuItem1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
+            gitHubToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             statusToolStripStatusLabel = new ToolStripStatusLabel();
@@ -85,42 +86,50 @@
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(270, 34);
+            openToolStripMenuItem.Size = new Size(215, 34);
             openToolStripMenuItem.Text = "打开";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
             // configToolStripMenuItem
             // 
             configToolStripMenuItem.Name = "configToolStripMenuItem";
-            configToolStripMenuItem.Size = new Size(270, 34);
+            configToolStripMenuItem.Size = new Size(215, 34);
             configToolStripMenuItem.Text = "配置";
             configToolStripMenuItem.Click += configToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(267, 6);
+            toolStripMenuItem1.Size = new Size(212, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            exitToolStripMenuItem.Size = new Size(270, 34);
+            exitToolStripMenuItem.Size = new Size(215, 34);
             exitToolStripMenuItem.Text = "退出";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gitHubToolStripMenuItem, aboutToolStripMenuItem });
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(88, 28);
             helpToolStripMenuItem.Text = "帮助(&H)";
             // 
+            // gitHubToolStripMenuItem
+            // 
+            gitHubToolStripMenuItem.Name = "gitHubToolStripMenuItem";
+            gitHubToolStripMenuItem.Size = new Size(270, 34);
+            gitHubToolStripMenuItem.Text = "GitHub 仓库";
+            gitHubToolStripMenuItem.Click += gitHubToolStripMenuItem_Click;
+            // 
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(146, 34);
+            aboutToolStripMenuItem.Size = new Size(270, 34);
             aboutToolStripMenuItem.Text = "关于";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // statusStrip
             // 
@@ -163,9 +172,9 @@
             previewStatusLabel.Font = new Font("Microsoft YaHei UI", 6F);
             previewStatusLabel.Location = new Point(6, 292);
             previewStatusLabel.Name = "previewStatusLabel";
-            previewStatusLabel.Size = new Size(119, 85);
+            previewStatusLabel.Size = new Size(127, 85);
             previewStatusLabel.TabIndex = 10;
-            previewStatusLabel.Text = "统计信息:\r\nPNG与JP2图片: --\r\nRGB与ARGB文件: --\r\nBIN文件: --\r\n信息文件: --";
+            previewStatusLabel.Text = "统计信息:\r\nPNG 与 JP2图片: --\r\nRGB 与 ARGB文件: --\r\nBIN 文件: --\r\n信息文件: --";
             // 
             // previewPictureBox
             // 
@@ -241,9 +250,9 @@
             convertJp2ToPngCheckBox.Enabled = false;
             convertJp2ToPngCheckBox.Location = new Point(156, 165);
             convertJp2ToPngCheckBox.Name = "convertJp2ToPngCheckBox";
-            convertJp2ToPngCheckBox.Size = new Size(158, 28);
+            convertJp2ToPngCheckBox.Size = new Size(168, 28);
             convertJp2ToPngCheckBox.TabIndex = 11;
-            convertJp2ToPngCheckBox.Text = "JP2转换成PNG";
+            convertJp2ToPngCheckBox.Text = "JP2 转换成 PNG";
             convertJp2ToPngCheckBox.UseVisualStyleBackColor = true;
             // 
             // renameWithKeysCheckBox
@@ -263,9 +272,9 @@
             saveBinCheckBox.Enabled = false;
             saveBinCheckBox.Location = new Point(6, 131);
             saveBinCheckBox.Name = "saveBinCheckBox";
-            saveBinCheckBox.Size = new Size(270, 28);
+            saveBinCheckBox.Size = new Size(275, 28);
             saveBinCheckBox.TabIndex = 9;
-            saveBinCheckBox.Text = "输出BIN(包括TOC、Mask等)";
+            saveBinCheckBox.Text = "输出 BIN(包括TOC、Mask等)";
             saveBinCheckBox.UseVisualStyleBackColor = true;
             // 
             // saveArgbCheckBox
@@ -274,9 +283,9 @@
             saveArgbCheckBox.Enabled = false;
             saveArgbCheckBox.Location = new Point(6, 97);
             saveArgbCheckBox.Name = "saveArgbCheckBox";
-            saveArgbCheckBox.Size = new Size(121, 28);
+            saveArgbCheckBox.Size = new Size(126, 28);
             saveArgbCheckBox.TabIndex = 8;
-            saveArgbCheckBox.Text = "输出ARGB";
+            saveArgbCheckBox.Text = "输出 ARGB";
             saveArgbCheckBox.UseVisualStyleBackColor = true;
             // 
             // saveRgbCheckBox
@@ -285,16 +294,16 @@
             saveRgbCheckBox.Enabled = false;
             saveRgbCheckBox.Location = new Point(6, 63);
             saveRgbCheckBox.Name = "saveRgbCheckBox";
-            saveRgbCheckBox.Size = new Size(108, 28);
+            saveRgbCheckBox.Size = new Size(113, 28);
             saveRgbCheckBox.TabIndex = 6;
-            saveRgbCheckBox.Text = "输出RGB";
+            saveRgbCheckBox.Text = "输出 RGB";
             saveRgbCheckBox.UseVisualStyleBackColor = true;
             // 
             // savePlistCheckBox
             // 
             savePlistCheckBox.AutoSize = true;
             savePlistCheckBox.Enabled = false;
-            savePlistCheckBox.Location = new Point(120, 63);
+            savePlistCheckBox.Location = new Point(125, 63);
             savePlistCheckBox.Name = "savePlistCheckBox";
             savePlistCheckBox.Size = new Size(193, 28);
             savePlistCheckBox.TabIndex = 7;
@@ -307,11 +316,11 @@
             saveJp2CheckBox.Checked = true;
             saveJp2CheckBox.CheckState = CheckState.Checked;
             saveJp2CheckBox.Enabled = false;
-            saveJp2CheckBox.Location = new Point(120, 29);
+            saveJp2CheckBox.Location = new Point(125, 29);
             saveJp2CheckBox.Name = "saveJp2CheckBox";
-            saveJp2CheckBox.Size = new Size(203, 28);
+            saveJp2CheckBox.Size = new Size(167, 28);
             saveJp2CheckBox.TabIndex = 5;
-            saveJp2CheckBox.Text = "输出JP2(JPEG 2000)";
+            saveJp2CheckBox.Text = "输出 JPEG 2000";
             saveJp2CheckBox.UseVisualStyleBackColor = true;
             // 
             // savePngCheckBox
@@ -322,9 +331,9 @@
             savePngCheckBox.Enabled = false;
             savePngCheckBox.Location = new Point(6, 29);
             savePngCheckBox.Name = "savePngCheckBox";
-            savePngCheckBox.Size = new Size(111, 28);
+            savePngCheckBox.Size = new Size(116, 28);
             savePngCheckBox.TabIndex = 4;
-            savePngCheckBox.Text = "输出PNG";
+            savePngCheckBox.Text = "输出 PNG";
             savePngCheckBox.UseVisualStyleBackColor = true;
             // 
             // clearBtn
@@ -413,5 +422,6 @@
         private CheckBox convertJp2ToPngCheckBox;
         private CheckBox renameWithKeysCheckBox;
         private CheckBox saveBinCheckBox;
+        private ToolStripMenuItem gitHubToolStripMenuItem;
     }
 }
