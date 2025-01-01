@@ -12,9 +12,15 @@ namespace icns4win
 {
     public partial class WndConfig : Form
     {
+        private static readonly string rdyDirectIcnsutil = "icnsutil e {source} -o {export}";
+        private static readonly string rdyPythonRun = "python icnsutil.py e {source} -o {export}";
+
         public WndConfig()
         {
             InitializeComponent();
+            argsTextBox.Text = BackendConfig.currentConfig.customArgs;
+            supportKeysRenameCheckBox.Checked = BackendConfig.currentConfig.supportRenameAsKeys;
+            keysArgTextBox.Text = BackendConfig.currentConfig.keyArgs;
         }
 
         // 按下保存并关闭按钮
@@ -59,6 +65,32 @@ namespace icns4win
         private void compatibleLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("explorer.exe", "https://github.com/relikd/icnsutil/");
+        }
+
+        private void argsTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (argsTextBox.Text == rdyDirectIcnsutil)
+            {
+                readyArgsComboBox.SelectedIndex = 0;
+            }
+            else if (argsTextBox.Text == rdyPythonRun)
+            {
+                readyArgsComboBox.SelectedIndex = 1;
+            }
+            else
+            {
+                readyArgsComboBox.SelectedIndex = 2;
+            }
+        }
+
+        private void readyArgsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (readyArgsComboBox.SelectedIndex == 0)
+                argsTextBox.Text = rdyDirectIcnsutil;
+            else if (readyArgsComboBox.SelectedIndex == 1)
+            {
+                argsTextBox.Text = rdyPythonRun;
+            }
         }
     }
 }

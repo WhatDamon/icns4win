@@ -82,9 +82,9 @@
             // 
             // testArgsBtn
             // 
-            testArgsBtn.Location = new Point(341, 28);
+            testArgsBtn.Location = new Point(346, 28);
             testArgsBtn.Name = "testArgsBtn";
-            testArgsBtn.Size = new Size(137, 34);
+            testArgsBtn.Size = new Size(132, 34);
             testArgsBtn.TabIndex = 4;
             testArgsBtn.Text = "测试是否工作";
             testArgsBtn.UseVisualStyleBackColor = true;
@@ -105,8 +105,9 @@
             readyArgsComboBox.Items.AddRange(new object[] { "直接调用 icnsutil", "使用 Python 调用 icnsutil", "自定义" });
             readyArgsComboBox.Location = new Point(96, 29);
             readyArgsComboBox.Name = "readyArgsComboBox";
-            readyArgsComboBox.Size = new Size(239, 32);
+            readyArgsComboBox.Size = new Size(253, 32);
             readyArgsComboBox.TabIndex = 3;
+            readyArgsComboBox.SelectedIndexChanged += readyArgsComboBox_SelectedIndexChanged;
             // 
             // keysArgTextBox
             // 
@@ -114,7 +115,6 @@
             keysArgTextBox.Name = "keysArgTextBox";
             keysArgTextBox.Size = new Size(156, 30);
             keysArgTextBox.TabIndex = 8;
-            keysArgTextBox.Text = "-k";
             // 
             // argsDescriptionLabel
             // 
@@ -142,7 +142,7 @@
             argsTextBox.Name = "argsTextBox";
             argsTextBox.Size = new Size(382, 30);
             argsTextBox.TabIndex = 5;
-            argsTextBox.Text = "icnsutil e {source} -o {export}";
+            argsTextBox.TextChanged += argsTextBox_TextChanged;
             argsTextBox.Validating += argsTextBox_Validating;
             // 
             // supportKeysRenameCheckBox
