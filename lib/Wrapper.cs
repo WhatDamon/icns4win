@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenJpegDotNet;
 
-namespace icns4win
+namespace icns4win.lib
 {
     internal class Wrapper
     {

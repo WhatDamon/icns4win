@@ -120,14 +120,14 @@
             // gitHubToolStripMenuItem
             // 
             gitHubToolStripMenuItem.Name = "gitHubToolStripMenuItem";
-            gitHubToolStripMenuItem.Size = new Size(270, 34);
+            gitHubToolStripMenuItem.Size = new Size(213, 34);
             gitHubToolStripMenuItem.Text = "GitHub 仓库";
             gitHubToolStripMenuItem.Click += gitHubToolStripMenuItem_Click;
             // 
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(270, 34);
+            aboutToolStripMenuItem.Size = new Size(213, 34);
             aboutToolStripMenuItem.Text = "关于";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
@@ -378,6 +378,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "icns4win";
             FormClosing += WndMain_FormClosing;
+            Load += WndMain_Load;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             statusStrip.ResumeLayout(false);

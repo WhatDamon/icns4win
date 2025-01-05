@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace icns4win
+namespace icns4win.lib
 {
     internal class BackendConfig
     {
@@ -55,7 +55,7 @@ namespace icns4win
                     return false;
                 }
             }
-            
+
             // 如果 jsonString 为空（即非创建默认配置），则从配置文件中读取
             if (jsonString != null)
             {
@@ -101,7 +101,7 @@ namespace icns4win
                 MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            
+
             return true;
         }
 

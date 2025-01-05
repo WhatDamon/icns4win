@@ -1,3 +1,4 @@
+using icns4win.lib;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -39,7 +40,71 @@ namespace icns4win
             {
                 MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            // 初始化窗口
             InitializeComponent();
+        }
+
+        // 窗口加载事件
+        private void WndMain_Load(object sender, EventArgs e)
+        {
+            checkForIcnsutil();
+        }
+
+        // 检查 icnsutil 是否存在
+        private void checkForIcnsutil()
+        {
+            string icnsutilName;
+            string icnsutilFullPath;
+            bool runWithPython = false;
+
+            Misc.CommandLineParser.ParseCommand(BackendConfig.currentConfig.customArgs, out icnsutilFullPath, out icnsutilName, out runWithPython);
+
+            if (!Path.Exists(icnsutilFullPath))
+            {
+                TaskDialogPage page = new TaskDialogPage()
+                {
+                    Icon = TaskDialogIcon.Warning,
+                    Caption = "警告",
+                    Heading = $"未找到: {icnsutilName}",
+                    Text = $"在转换过程中，我们将会使用找不到的文件，缺少它软件将无法工作!",
+                    Expander = new TaskDialogExpander()
+                    {
+                        Text = $"您所配置的命令行为: \n{BackendConfig.currentConfig.customArgs}\n查找的文件为: \n{icnsutilFullPath}",
+                    },
+                    Buttons =
+                    {
+                        new TaskDialogCommandLinkButton("下载预编译版本", "这里下载已经预编译完成的 icnsutil 二进制文件, 并使用默认配置")
+                        {
+                            Tag = 10
+                        },
+                        new TaskDialogCommandLinkButton("配置", "您已经有可用的 icnsutil 了? 在此处配置")
+                        {
+                            Tag = 20
+                        },
+                        TaskDialogButton.Retry,
+                        TaskDialogButton.Close
+                    },
+                };
+                TaskDialogButton result = TaskDialog.ShowDialog(this, page);
+
+                if (result == TaskDialogButton.Retry)
+                {
+                    checkForIcnsutil();
+                }
+                else if (result == TaskDialogButton.Close)
+                {
+                    Application.Exit();
+                }
+                else if ((int)result.Tag == 10)
+                {
+                    MessageBox.Show("press 下载预编译版本");
+                }
+                else if ((int)result.Tag == 20)
+                {
+                    MessageBox.Show("press 配置");
+                }
+            }
         }
 
         // 打开文件到文本框
