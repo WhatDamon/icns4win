@@ -157,7 +157,8 @@ namespace icns4win
         // 按下解析按钮
         private void convertBtn_Click(object sender, EventArgs e)
         {
-
+            checkForIcnsutil();
+            Wrapper.ProcessIcns(filePathTextBox.Text, tempPath, false);
         }
 
         // 退出应用
@@ -221,6 +222,18 @@ namespace icns4win
         private void gitHubToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("explorer.exe", "https://github.com/WhatDamon/icns4win");
+        }
+
+        // 按下打开日志按钮
+        private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // 按下打开临时目录按钮
+        private void openTempDirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", tempPath);
         }
     }
 }

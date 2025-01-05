@@ -8,6 +8,9 @@ namespace icns4win.lib
 {
     internal class Misc
     {
+        /// <summary>
+        /// 命令行参数解析器
+        /// </summary>
         public class CommandLineParser
         {
             private static string[] SplitCommandLine(string command)

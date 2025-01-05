@@ -32,6 +32,9 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
             configToolStripMenuItem = new ToolStripMenuItem();
+            miscToolStripMenuItem = new ToolStripMenuItem();
+            openLogToolStripMenuItem = new ToolStripMenuItem();
+            openTempDirToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -77,7 +80,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, configToolStripMenuItem, toolStripMenuItem1, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, configToolStripMenuItem, miscToolStripMenuItem, toolStripMenuItem1, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(84, 28);
             fileToolStripMenuItem.Text = "文件(&F)";
@@ -86,27 +89,48 @@
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(215, 34);
+            openToolStripMenuItem.Size = new Size(270, 34);
             openToolStripMenuItem.Text = "打开";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
             // configToolStripMenuItem
             // 
             configToolStripMenuItem.Name = "configToolStripMenuItem";
-            configToolStripMenuItem.Size = new Size(215, 34);
+            configToolStripMenuItem.Size = new Size(270, 34);
             configToolStripMenuItem.Text = "配置";
             configToolStripMenuItem.Click += configToolStripMenuItem_Click;
+            // 
+            // miscToolStripMenuItem
+            // 
+            miscToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openLogToolStripMenuItem, openTempDirToolStripMenuItem });
+            miscToolStripMenuItem.Name = "miscToolStripMenuItem";
+            miscToolStripMenuItem.Size = new Size(270, 34);
+            miscToolStripMenuItem.Text = "杂项";
+            // 
+            // openLogToolStripMenuItem
+            // 
+            openLogToolStripMenuItem.Name = "openLogToolStripMenuItem";
+            openLogToolStripMenuItem.Size = new Size(270, 34);
+            openLogToolStripMenuItem.Text = "打开日志";
+            openLogToolStripMenuItem.Click += openLogToolStripMenuItem_Click;
+            // 
+            // openTempDirToolStripMenuItem
+            // 
+            openTempDirToolStripMenuItem.Name = "openTempDirToolStripMenuItem";
+            openTempDirToolStripMenuItem.Size = new Size(270, 34);
+            openTempDirToolStripMenuItem.Text = "打开临时目录";
+            openTempDirToolStripMenuItem.Click += openTempDirToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(212, 6);
+            toolStripMenuItem1.Size = new Size(267, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            exitToolStripMenuItem.Size = new Size(215, 34);
+            exitToolStripMenuItem.Size = new Size(270, 34);
             exitToolStripMenuItem.Text = "退出";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -424,5 +448,8 @@
         private CheckBox renameWithKeysCheckBox;
         private CheckBox saveBinCheckBox;
         private ToolStripMenuItem gitHubToolStripMenuItem;
+        private ToolStripMenuItem miscToolStripMenuItem;
+        private ToolStripMenuItem openLogToolStripMenuItem;
+        private ToolStripMenuItem openTempDirToolStripMenuItem;
     }
 }

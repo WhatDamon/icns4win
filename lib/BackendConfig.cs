@@ -10,9 +10,11 @@ namespace icns4win.lib
     internal class BackendConfig
     {
         // 默认配置
-        private static readonly string dftCustomArgs = "icnsutil e {source} -o {export}";
-        private static readonly string dftKeyArgs = "-k";
         private static readonly bool dftSupportRenameAsKeys = true;
+        private static readonly string[] dftArgs = {
+            "icnsutil.exe e {source} -o {export}",
+            "-k"
+            };
 
         // 基本配置类
         public class Config
@@ -39,9 +41,9 @@ namespace icns4win.lib
             {
                 Config defaultConfig = new Config
                 {
-                    customArgs = dftCustomArgs,
+                    customArgs = dftArgs[0],
                     supportRenameAsKeys = dftSupportRenameAsKeys,
-                    keyArgs = dftKeyArgs
+                    keyArgs = dftArgs[1]
                 };
 
                 jsonString = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
@@ -92,9 +94,9 @@ namespace icns4win.lib
         {
             try
             {
-                currentConfig.customArgs = dftCustomArgs;
+                currentConfig.customArgs = dftArgs[0];
+                currentConfig.keyArgs = dftArgs[1];
                 currentConfig.supportRenameAsKeys = dftSupportRenameAsKeys;
-                currentConfig.keyArgs = dftKeyArgs;
             }
             catch (Exception ex)
             {
